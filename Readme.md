@@ -15,7 +15,7 @@
 #### 1. რეპოზიტორიის კლონირება
 ```bash
 git clone <your-repo-url>
-cd TBC_GenAIbot
+cd FinSense-Bot
 ```
 
 #### 2. ვირტუალური გარემოს შექმნა
@@ -26,12 +26,12 @@ source .venv/bin/activate  # macOS/Linux
 .venv\Scripts\activate  # Windows
 ```
 
-#### 3. დამოკიდებულებების ინსტალაცია
+#### 3. requirements ინსტალაცია
 ```bash
 pip install -r requirements.txt
 ```
 
-#### 4. გარემოს ცვლადების დაყენება
+#### 4. .env ფაილი და env variables
 ```env
 OPENAI_API_KEY=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
 OPENAI_MODEL=gpt-4o-mini
