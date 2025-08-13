@@ -10,7 +10,6 @@ from .graph import build_graph
 from .config import get_system_prompt
 
 def main_loop() -> None:
-    # create console for nice output
     console = Console()
     
     # build the bot
@@ -42,13 +41,12 @@ def main_loop() -> None:
             console.print("\nნახვამდის! 👋")
             break
 
-        # check for greetings
         greetings = ["hi", "გამარჯობა", "სალამი", "ჰაი", "gamarjoba", "hii", "salami"]
         if user_input.strip().lower() in greetings:
             console.print("[bold green]ბოტი:[/bold green]", "გამარჯობა!👋 მიხარია რომ მომწერე, რით შემიძლია შენი დახმარება?")
             continue
 
-        # check for quit commands
+        # quit commands
         quit_words = {"exit", "ნახვამდის", "naxvamdis", "bye", "kargad", "მადლობ", "მადლობა", "წავედი", "კარგად"}
         if user_input.strip().lower() in quit_words:
             console.print("ნახვამდის! 👋")
@@ -71,10 +69,8 @@ def main_loop() -> None:
                 console.print("[bold green]ბოტი:[/bold green]", response)
             continue
 
-        # add user message
         messages.append(HumanMessage(content=user_input))
         
-        # prepare state for bot
         state = {"messages": messages}
         
         # get bot response
@@ -95,10 +91,10 @@ def handle_banking_flow(user_input: str, banking_flow: Dict, console: Console) -
     """Handle the multi-step banking flow for account opening."""
     
     if banking_flow["step"] == 1:
-        # Step 1: Account type selection - more flexible
+        # Step 1: Account type selection
         user_input_clean = user_input.strip().lower()
         
-        # try exact numbers first
+
         if user_input_clean in ["1", "2", "3"]:
             account_types = {
                 "1": "სახელფასო ანგარიში",
@@ -110,7 +106,7 @@ def handle_banking_flow(user_input: str, banking_flow: Dict, console: Console) -
             
             return f"აირჩიეთ {banking_flow['account_type']}. ახლა მითხარით თქვენი სახელი და გვარი:"
         
-        # try text alternatives
+        #  text alternatives
         elif any(word in user_input_clean for word in ["სახელფასო", "salary", "salary", "1"]):
             banking_flow["account_type"] = "სახელფასო ანგარიში"
             banking_flow["step"] = 2
@@ -156,7 +152,7 @@ def handle_banking_flow(user_input: str, banking_flow: Dict, console: Console) -
             return " არასწორია, გთხოვთ შეიყვანოთ სწორი პირადობის ნომერი (მინიმუმ 9 ციფრი):"
     
     elif banking_flow["step"] == 4:
-        # Step 4: Phone number - more flexible
+        # Phone number - more flexible
         user_input_clean = user_input.strip()
         
         # remove spaces, dashes, parentheses, and plus signs
@@ -181,7 +177,7 @@ def handle_banking_flow(user_input: str, banking_flow: Dict, console: Console) -
             return "გთხოვთ შეიყვანოთ სწორი ტელეფონის ნომერი (მინიმუმ 9 ციფრი):"
     
     elif banking_flow["step"] == 5:
-        # Step 5: Confirmation - more flexible
+        # Confirmation - more flexible
         user_input_clean = user_input.strip().lower()
         
         # more confirmation options
@@ -199,7 +195,7 @@ def handle_banking_flow(user_input: str, banking_flow: Dict, console: Console) -
             return "გთხოვთ უპასუხოთ 'დიახ' ან 'არა' (ან 'yes'/'no'):"
     
     elif banking_flow["step"] == 6:
-        # Step 6: Flow complete, reset
+        # Flow complete, reset
         banking_flow["active"] = False
         banking_flow["step"] = 0
         banking_flow["account_type"] = ""
