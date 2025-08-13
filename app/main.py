@@ -15,14 +15,12 @@ def main_loop() -> None:
     # build the bot
     app = build_graph().compile()
 
-    # get system prompt
     system_prompt = get_system_prompt()
     
-    # start with system message
     messages: List[BaseMessage] = [SystemMessage(content=system_prompt)]
 
     # welcome message
-    console.print(Markdown("**TBC ბოტი** მიწერეთ ბოტს \"ნახვამდის\" ან \"მადლობ\" ინტერაქციის დასასრულებლად!"))
+    console.print(Markdown("მოგესალმებათ **TBC ბოტი**. დაუსვით თქვენთვის სასურველი კითხვა და ეცდება თქვენს დახმარებას, ინტერაქციის დასასრულებლად კი მიწერეთ ბოტს \"ნახვამდის\" ან \"მადლობ\""))
 
     # banking flow state
     banking_flow = {
@@ -32,7 +30,6 @@ def main_loop() -> None:
         "personal_info": {}
     }
 
-    # main chat loop
     while True:
         try:
             # get user input
@@ -57,9 +54,10 @@ def main_loop() -> None:
             banking_flow["active"] = True
             banking_flow["step"] = 1
             console.print("[bold green]ბოტი:[/bold green]", "მე დაგეხმარებით ანგარიშის გახსნაში. რა ტიპის ანგარიშის გახსნა გინდათ?")
-            console.print("1) სახელფასო ანგარიში")
-            console.print("2) ბიზნესის ანგარიში")
-            console.print("3) სავალუტო ანგარიში (USD, EUR)")
+            console.print("გთხოვთ მოიწეროთ რიცხვი ან სიტყვიერად")
+            console.print("1. სახელფასო ანგარიში")
+            console.print("2. ბიზნესის ანგარიში")
+            console.print("3. მულტისავალუტო ანგარიში")
             continue
 
         # handle banking flow steps
@@ -135,34 +133,34 @@ def handle_banking_flow(user_input: str, banking_flow: Dict, console: Console) -
             banking_flow["step"] = 3
             return "შეიყვანეთ პირადობის ნომერი"
         else:
-            return "გთხოვთ შეიყვანოთ თქვენი სრული სახელი და გვარი :"
+            return "გთხოვთ შეიყვანოთ სრული სახელი და გვარი :"
     
     elif banking_flow["step"] == 3:
-        # Step 3: ID number - more flexible
+        # Step 3: ID number
         user_input_clean = user_input.strip()
         
-        # remove spaces and dashes, check if it's numeric
-        clean_id = user_input_clean.replace(" ", "").replace("-", "")
+        # რიცხვები არის თუ არა, ზედმეტი სიმბოლოები ჩავანაცვლოთ
+        clean_id = user_input_clean.replace(" ", "").replace("-", "").replace("_", "")
         
         if len(clean_id) >= 9 and clean_id.isdigit():
             banking_flow["personal_info"]["id_number"] = clean_id
             banking_flow["step"] = 4
-            return "თქვენი ტელეფონის ნომერი:"
+            return "შეიყვანეთ თქვენი ტელეფონის ნომერი:"
         else:
             return " არასწორია, გთხოვთ შეიყვანოთ სწორი პირადობის ნომერი (მინიმუმ 9 ციფრი):"
     
     elif banking_flow["step"] == 4:
-        # Phone number - more flexible
+        # ტელ ნომერი
         user_input_clean = user_input.strip()
         
-        # remove spaces, dashes, parentheses, and plus signs
+        # ზედმეტი სიმბოლოები ჩავანაცვლოთ
         clean_phone = user_input_clean.replace(" ", "").replace("-", "").replace("(", "").replace(")", "").replace("+", "")
         
         if len(clean_phone) >= 9 and clean_phone.isdigit():
             banking_flow["personal_info"]["phone"] = clean_phone
             banking_flow["step"] = 5
             
-            # Show summary
+            # შეჯამება
             summary = f"""
             📋 ანგარიშის გახსნის შეჯამება:
             🏦 ანგარიშის ტიპი: {banking_flow['account_type']}
@@ -170,17 +168,16 @@ def handle_banking_flow(user_input: str, banking_flow: Dict, console: Console) -
             🆔 ნომერი: {banking_flow['personal_info']['id_number']}
             📱 ტელეფონი: {banking_flow['personal_info']['phone']}
 
-            გსურთ გააგრძელოთ? (დიახ/არა)
+            გსურთ გააგრძელოთ? (მოიწერეთ "დიახ ან არა")
                         """
             return summary
         else:
             return "გთხოვთ შეიყვანოთ სწორი ტელეფონის ნომერი (მინიმუმ 9 ციფრი):"
     
     elif banking_flow["step"] == 5:
-        # Confirmation - more flexible
+        # Confirmation
         user_input_clean = user_input.strip().lower()
         
-        # more confirmation options
         if user_input_clean in ["დიახ", "კი", "ხოოო", "yes", "ki", "qi", "ok", "კარგი", "y"]:
             banking_flow["step"] = 6
             return "მადლობ! 🎉 ჩვენი თანამშრომელი დაგიკავშირდებათ 24 საათის განმავლობაში დეტალების დასაზუსტებლად."
@@ -192,7 +189,7 @@ def handle_banking_flow(user_input: str, banking_flow: Dict, console: Console) -
             banking_flow["personal_info"] = {}
             return "კარგი, ანგარიშის გახსნა შეჩერებულია."
         else:
-            return "გთხოვთ უპასუხოთ 'დიახ' ან 'არა' (ან 'yes'/'no'):"
+            return "გთხოვთ უპასუხოთ 'დიახ' ან 'არა':"
     
     elif banking_flow["step"] == 6:
         # Flow complete, reset
