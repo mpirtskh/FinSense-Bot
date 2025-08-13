@@ -70,6 +70,13 @@ python -m app.main
 #### Open-Meteo (ამინდი)
 #### ExchangeRate-API (სავალუტო კურსები)
 
+
+#### 
+- **LangGraph** - for conversation agent
+- **LangChain** - for LLM integration
+- **OpenAI GPT-4o** - for natural language processing
+- **Python 3.10+** - main programming language
+- **Pydantic** - for data validation
 ---
 
 # GenAI Assistant for TBC [MVP]
@@ -84,13 +91,6 @@ TBC Bank's virtual assistant that uses artificial intelligence and LangGraph to 
 - "გადაიყვანე 50 ევრო ლარში" (Convert 50 Euro to Lari)
 - "რომელი საათია თბილისში?" (What time is it in Tbilisi time?)
 - "როგორი ამინდია ბათუმში?" (How's the weather in Batumi?)
-
-#### 
-- **LangGraph** - for conversation agent
-- **LangChain** - for LLM integration
-- **OpenAI GPT-4o** - for natural language processing
-- **Python 3.10+** - main programming language
-- **Pydantic** - for data validation
 
 
 ## 🚀 Installation
